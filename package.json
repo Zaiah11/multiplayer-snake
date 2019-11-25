@@ -1,0 +1,28 @@
+{
+  "name": "multiplayer-snake",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "testAPI": "mocha ./snakeAPI/test.js",
+    "testGame": "mocha ./snakeAPI/testGame.js",
+    "startAPI": "nodemon ./snakeAPI/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zaiah11/multiplayer-snake.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Zaiah11/multiplayer-snake/issues"
+  },
+  "homepage": "https://github.com/Zaiah11/multiplayer-snake#readme",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.2.2",
+    "nodemon": "^2.0.1",
+    "socket.io": "^2.3.0"
+  }
+}
