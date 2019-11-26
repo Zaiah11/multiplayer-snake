@@ -19,23 +19,23 @@ describe('snake', () => {
       })
     })
     describe('methods', () => {
-      it('should be able to create new food', () => {
+      it('should create new food', () => {
         const game = new Game()
         const oldLength = Object.keys(game.idxMap.empty[0]).length
         game.generateFood()
-        const { empty, active } = game.idxMap
-        const { food } = active
+        const { idxMap, snakes } = game
+        const { empty, food } = idxMap
         expect(food.length).to.not.equal(0)
         expect(food).to.be.an('object')
         expect(Object.keys(empty[food.x]).length).to.equal(oldLength - 1)
       })
-      it('should be able to update board', () => {
+      it('should update board', () => {
         const game = new Game()
         const oldBoard = game.board
         game.generateFood()
         expect(game.board).to.not.deep.equal(oldBoard)
       })
-      it('should be able to update player movement', () => {
+      it('should update player movement', () => {
         const game = new Game()
         const oldBoard = game.board
         game.playerMove([
@@ -43,17 +43,58 @@ describe('snake', () => {
           { player: 'player2', direction: 'DOWN'}
         ])
         expect(game.board).to.not.deep.equal(oldBoard)
-        expect(game.idxMap.active.player1.pop()).to.deep.equal({ x: 2, y: 3 })
+        expect(game.snakes.player1.pop()).to.deep.equal({ x: 2, y: 3 })
       })
-      it('should be able to handle player eating', () => {
+      it('should handle player eating', () => {
         const game = new Game()
-        const { idxMap, board } = game
-        const { active } = idxMap
-        active.player1 = [{ x: 8, y: 7 }]
+        const { board, snakes } = game
+        snakes.player1 = [{ x: 8, y: 7 }]
         game.playerMove([{ player: 'player1', direction: 'UP' }])
-        expect(game.idxMap.active.player1.length).to.equal(2)
+        expect(game.snakes.player1.length).to.equal(2)
         expect(game.board).to.not.deep.equal(board)
       })
+      it('should handle collisions with self', () => {
+        const game = new Game()
+        const { snakes } = game
+        snakes.player1 = [
+          { x: 3, y: 0 },
+          { x: 3, y: 1 },
+          { x: 3, y: 2 },
+          { x: 3, y: 3 }, 
+          { x: 4, y: 3 },
+          { x: 4, y: 2 }
+        ]
+        game.updateBoard()
+        game.playerMove([{ player: 'player1', direction: 'UP' }])
+        expect(game.snakes.player1.length).to.equal(0)
+      })
+      it('should keep track of all players', () => {
+        const game = new Game()
+        expect(game.idxMap.players[3][3]).to.equal(2)
+        game.playerMove([
+          { player: 'player1', direction: 'UP' },
+          { player: 'player2', direction: 'DOWN' }
+        ])
+        expect(game.idxMap.players[2][3]).to.equal(2)
+      })
+      // it('should handle collisions with players', () => {
+      //   const game = new Game()
+      //   const { idxMap, snakes } = game
+      //   snakes.player1 = [
+      //     { x: 3, y: 0 },
+      //     { x: 3, y: 1 },
+      //     { x: 3, y: 2 },
+      //     { x: 3, y: 3 }
+      //   ]
+      //   snakes.player2 = [
+      //     { x: 4, y: 3 },
+      //     { x: 4, y: 2 },
+      //     { x: 4, y: 1 }
+      //   ]
+      //   game.updateBoard()
+      //   game.playerMove([{ player: 'player2', direction: 'UP' }])
+      //   expect(game.idxMap.snakes.player2.length).to.equal(0)
+      // })
     })
   })
 })
